@@ -28,7 +28,7 @@ while True:
         messages.append({"role": "user", "content": user_input})
         
         response = client.chat.completions.create(
-            model="deepseek-chat",
+            model="deepseek-v4-pro",
             messages=messages
         )
         ai_reply = response.choices[0].message.content
@@ -42,7 +42,7 @@ while True:
         messages.append({"role": "user", "content": user_input})
         
         response = client.chat.completions.create(
-            model="deepseek-chat",
+            model="deepseek-v4-pro",
             messages=messages
         )
         ai_reply = response.choices[0].message.content
