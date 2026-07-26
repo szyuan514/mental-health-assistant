@@ -87,7 +87,7 @@ def get_risk_prompt(user_input):
 def judge_by_ai(user_input, client):
     try:
         response = client.chat.completions.create(
-            model="deepseek-chat",
+            model="deepseek-v4-pro",
             messages=[{"role": "user", "content": get_risk_prompt(user_input)}],
             temperature=0
         )
