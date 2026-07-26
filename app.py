@@ -77,6 +77,24 @@ st.markdown("""
     /* 隐藏默认菜单和页脚 */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+
+    /* 强制用户消息头像在右，消息靠右 */
+    [data-testid="stChatMessage"][kind="user"] {
+        flex-direction: row-reverse !important;
+        justify-content: flex-end !important;
+    }
+
+    /* 强制助手消息头像在左，消息靠左 */
+[   data-testid="stChatMessage"][kind="assistant"] {
+        flex-direction: row !important;
+        justify-content: flex-start !important;
+    }
+
+    /* 确保消息气泡内部文字对齐正常 */
+    [data-testid="stChatMessageContent"] {
+        text-align: left !important;
+    }
+    
 </style>
 """, unsafe_allow_html=True)
 
