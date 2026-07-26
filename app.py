@@ -85,7 +85,7 @@ st.markdown("""
     }
 
     /* 强制助手消息头像在左，消息靠左 */
-[   data-testid="stChatMessage"][kind="assistant"] {
+    [data-testid="stChatMessage"][kind="assistant"] {
         flex-direction: row !important;
         justify-content: flex-start !important;
     }
@@ -191,7 +191,7 @@ if user_input:
         
         if risk_level == 'high':
           response = client.chat.completions.create(
-            model="deepseek-chat",
+            model="deepseek-v4-pro",
             messages=st.session_state.messages
     )
           empathy_reply = response.choices[0].message.content
@@ -202,7 +202,7 @@ if user_input:
 
         else:
             response = client.chat.completions.create(
-                model="deepseek-chat",
+                model="deepseek-v4-pro",
                 messages=st.session_state.messages
             )
             reply = response.choices[0].message.content
