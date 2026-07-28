@@ -153,27 +153,37 @@ st.markdown("""
         }
 
         
-        @media (max-width: 768px) {
-        /* 调整标题大小 */
-        h1 {
-            font-size: 22px !important;
-        }
-        /* 调整侧边栏宽度 */
-        section[data-testid="stSidebar"] {
-            width: 280px !important;
-        }
-        /* 调整输入框大小 */
-        .stChatInputContainer textarea {
-            font-size: 14px !important;
-        }
-        /* 调整气泡内文字大小 */
-        [data-testid="stChatMessageContent"] {
-            font-size: 14px !important;
-        }
-        /* 调整侧边栏文字大小 */
-        section[data-testid="stSidebar"] * {
-            font-size: 13px !important;
-        }
+       /* ===== 手机端适配 ===== */
+    @media (max-width: 768px) {
+    /* 覆盖所有可能的标题选择器 */
+    .stApp h1,
+    .stApp .st-emotion-cache-1v3fvcr h1,
+    .stApp .st-emotion-cache-1hynsf2 h1,
+    .stApp .stHeading,
+    .stApp .stHeading h1,
+    h1 {
+        font-size: 22px !important;
+        line-height: 1.3 !important;
+    }
+    
+    /* 侧边栏宽度 */
+    section[data-testid="stSidebar"] {
+        width: 280px !important;
+    }
+    
+    /* 输入框 */
+    .stChatInputContainer textarea {
+        font-size: 14px !important;
+    }
+    
+    /* 气泡文字 */
+    [data-testid="stChatMessageContent"] {
+        font-size: 14px !important;
+    }
+    
+    /* 侧边栏文字 */
+    section[data-testid="stSidebar"] * {
+        font-size: 13px !important;
     }
     }
 </style>
