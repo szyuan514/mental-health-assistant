@@ -151,6 +151,30 @@ st.markdown("""
         section[data-testid="stSidebar"] h4 {
             color: #E8E8E8 !important;
         }
+
+        
+        @media (max-width: 768px) {
+        /* 调整标题大小 */
+        h1 {
+            font-size: 22px !important;
+        }
+        /* 调整侧边栏宽度 */
+        section[data-testid="stSidebar"] {
+            width: 280px !important;
+        }
+        /* 调整输入框大小 */
+        .stChatInputContainer textarea {
+            font-size: 14px !important;
+        }
+        /* 调整气泡内文字大小 */
+        [data-testid="stChatMessageContent"] {
+            font-size: 14px !important;
+        }
+        /* 调整侧边栏文字大小 */
+        section[data-testid="stSidebar"] * {
+            font-size: 13px !important;
+        }
+    }
     }
 </style>
 """, unsafe_allow_html=True)
