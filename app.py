@@ -28,6 +28,25 @@ client = OpenAI(api_key=API_KEY, base_url="https://api.deepseek.com")
 
 st.markdown("""
 <style>
+    /* ===== 强制浅色主题（覆盖系统深色模式） ===== */
+    :root {
+        color-scheme: light !important;
+    }
+    /* 强制所有元素使用浅色背景和深色文字 */
+    .stApp, .stApp > div:first-child, .main > div,
+    [data-testid="stChatMessageListContainer"],
+    [data-testid="stChatMessage"],
+    .stChatInputContainer, .stChatInputContainer > div,
+    header, .stApp footer, .stBottom {
+        background-color: #FFF5E6 !important;
+        color: #262730 !important;
+    }
+    /* 确保输入框文字颜色正确 */
+    .stChatInputContainer textarea {
+        color: #262730 !important;
+    }
+
+    /* ===== 原有的样式（以下保持不变） ===== */
     /* 全局背景 */
     .stApp > div:first-child, .main > div,
     [data-testid="stChatMessageListContainer"],
@@ -94,7 +113,6 @@ st.markdown("""
     [data-testid="stChatMessageContent"] {
         text-align: left !important;
     }
-    
 </style>
 """, unsafe_allow_html=True)
 
