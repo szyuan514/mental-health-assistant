@@ -28,94 +28,132 @@ client = OpenAI(api_key=API_KEY, base_url="https://api.deepseek.com")
 
 st.markdown("""
 <style>
-    /* ===== 强制浅色主题（覆盖系统深色模式） ===== */
+    /* ===== 浅色主题（默认） ===== */
     :root {
-        color-scheme: light !important;
+        --bg-main: #FFF5E6;
+        --bg-sidebar: #F0F0F0;
+        --bg-user-bubble: #E6F7FF;
+        --bg-ai-bubble: #FFF0E0;
+        --bg-input: #FFFFFF;
+        --text-color: #262730;
+        --border-color: #E0C9A6;
+        --shadow-color: rgba(0,0,0,0.05);
     }
-    /* 强制所有元素使用浅色背景和深色文字 */
+
+    /* ===== 深色主题（跟随系统） ===== */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-main: #1E1E2A;
+            --bg-sidebar: #2A2A3A;
+            --bg-user-bubble: #2D4A5E;
+            --bg-ai-bubble: #3A2E3E;
+            --bg-input: #2A2A3A;
+            --text-color: #E8E8E8;
+            --border-color: #4A4A5A;
+            --shadow-color: rgba(0,0,0,0.3);
+        }
+        /* 深色模式下输入框文字颜色 */
+        .stChatInputContainer textarea {
+            color: #E8E8E8 !important;
+        }
+        /* 深色模式下侧边栏文字颜色 */
+        section[data-testid="stSidebar"] * {
+            color: #E8E8E8 !important;
+        }
+    }
+
+    /* ===== 全局应用主题变量 ===== */
     .stApp, .stApp > div:first-child, .main > div,
     [data-testid="stChatMessageListContainer"],
     [data-testid="stChatMessage"],
     .stChatInputContainer, .stChatInputContainer > div,
     header, .stApp footer, .stBottom {
-        background-color: #FFF5E6 !important;
-        color: #262730 !important;
-    }
-    /* 确保输入框文字颜色正确 */
-    .stChatInputContainer textarea {
-        color: #262730 !important;
+        background-color: var(--bg-main) !important;
+        color: var(--text-color) !important;
     }
 
-    /* ===== 原有的样式（以下保持不变） ===== */
-    /* 全局背景 */
-    .stApp > div:first-child, .main > div,
-    [data-testid="stChatMessageListContainer"],
-    [data-testid="stChatMessage"] {
-        background-color: #FFF5E6 !important;
-    }
-
-    /* 侧边栏 */
+    /* ===== 侧边栏 ===== */
     section[data-testid="stSidebar"] {
-        background-color: #F0F0F0 !important;
+        background-color: var(--bg-sidebar) !important;
     }
 
-    /* 消息气泡圆角 + 边框 */
+    /* ===== 消息气泡 ===== */
     [data-testid="stChatMessageContent"] {
         border-radius: 18px;
         padding: 10px;
-        border: 1px solid #E0C9A6;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        border: 1px solid var(--border-color);
+        box-shadow: 0 1px 2px var(--shadow-color);
+        color: var(--text-color) !important;
     }
 
     /* 用户气泡 */
     [data-testid="stChatMessage"][kind="user"] [data-testid="stChatMessageContent"] {
-        background-color: #E6F7FF !important;
+        background-color: var(--bg-user-bubble) !important;
     }
 
     /* AI 气泡 */
     [data-testid="stChatMessage"][kind="assistant"] [data-testid="stChatMessageContent"] {
-        background-color: #FFF0E0 !important;
+        background-color: var(--bg-ai-bubble) !important;
     }
 
-    /* 输入框区域背景 */
+    /* ===== 输入框 ===== */
     .stChatInputContainer, .stChatInputContainer > div,
     .stChatInputContainer > div > div {
-        background-color: #FFF5E6 !important;
+        background-color: var(--bg-main) !important;
     }
     .stChatInputContainer textarea {
-        background-color: #FFFFFF !important;
+        background-color: var(--bg-input) !important;
         border-radius: 25px !important;
-        border: 1px solid #E0E0E0 !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-color) !important;
     }
 
-    /* 顶部栏、底部保持 */
+    /* ===== 顶部栏、底部 ===== */
     header, .stApp footer, .stBottom {
-        background-color: #FFF5E6 !important;
+        background-color: var(--bg-main) !important;
     }
 
-    /* 隐藏默认菜单和页脚 */
+    /* ===== 隐藏默认菜单和页脚 ===== */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
 
-    /* 强制用户消息头像在右，消息靠右 */
+    /* ===== 头像位置（深浅模式通用） ===== */
+    /* 用户消息：头像在右，消息靠右 */
     [data-testid="stChatMessage"][kind="user"] {
         flex-direction: row-reverse !important;
         justify-content: flex-end !important;
     }
 
-    /* 强制助手消息头像在左，消息靠左 */
+    /* 助手消息：头像在左，消息靠左 */
     [data-testid="stChatMessage"][kind="assistant"] {
         flex-direction: row !important;
         justify-content: flex-start !important;
     }
 
-    /* 确保消息气泡内部文字对齐正常 */
+    /* 消息气泡内文字左对齐 */
     [data-testid="stChatMessageContent"] {
         text-align: left !important;
     }
+
+    /* 深色模式下额外修正：输入框占位符颜色 */
+    @media (prefers-color-scheme: dark) {
+        .stChatInputContainer textarea::placeholder {
+            color: #8888AA !important;
+        }
+        /* 侧边栏按钮颜色适配 */
+        section[data-testid="stSidebar"] button {
+            color: #E8E8E8 !important;
+        }
+        /* 侧边栏标题颜色 */
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3,
+        section[data-testid="stSidebar"] h4 {
+            color: #E8E8E8 !important;
+        }
+    }
 </style>
 """, unsafe_allow_html=True)
-
 # ========== 初始化会话状态 ==========
 if "messages" not in st.session_state:
     st.session_state.messages = [
