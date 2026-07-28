@@ -52,12 +52,22 @@ st.markdown("""
             --border-color: #4A4A5A;
             --shadow-color: rgba(0,0,0,0.3);
         }
-        /* 深色模式下输入框文字颜色 */
         .stChatInputContainer textarea {
             color: #E8E8E8 !important;
         }
-        /* 深色模式下侧边栏文字颜色 */
         section[data-testid="stSidebar"] * {
+            color: #E8E8E8 !important;
+        }
+        .stChatInputContainer textarea::placeholder {
+            color: #8888AA !important;
+        }
+        section[data-testid="stSidebar"] button {
+            color: #E8E8E8 !important;
+        }
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3,
+        section[data-testid="stSidebar"] h4 {
             color: #E8E8E8 !important;
         }
     }
@@ -118,85 +128,52 @@ st.markdown("""
     footer {visibility: hidden;}
 
     /* ===== 头像位置（深浅模式通用） ===== */
-    /* 用户消息：头像在右，消息靠右 */
     [data-testid="stChatMessage"][kind="user"] {
         flex-direction: row-reverse !important;
         justify-content: flex-end !important;
     }
-
-    /* 助手消息：头像在左，消息靠左 */
     [data-testid="stChatMessage"][kind="assistant"] {
         flex-direction: row !important;
         justify-content: flex-start !important;
     }
-
-    /* 消息气泡内文字左对齐 */
     [data-testid="stChatMessageContent"] {
         text-align: left !important;
     }
 
-    /* 深色模式下额外修正：输入框占位符颜色 */
-    @media (prefers-color-scheme: dark) {
-        .stChatInputContainer textarea::placeholder {
-            color: #8888AA !important;
-        }
-        /* 侧边栏按钮颜色适配 */
-        section[data-testid="stSidebar"] button {
-            color: #E8E8E8 !important;
-        }
-        /* 侧边栏标题颜色 */
-        section[data-testid="stSidebar"] h1,
-        section[data-testid="stSidebar"] h2,
-        section[data-testid="stSidebar"] h3,
-        section[data-testid="stSidebar"] h4 {
-            color: #E8E8E8 !important;
-        }
-
-        
-       /* ===== 手机端适配 ===== */
+    /* ===== 手机端适配（与深浅模式平级，不嵌套） ===== */
     @media (max-width: 768px) {
-    /* 覆盖所有可能的标题选择器 */
-    .stApp h1,
-    .stApp .st-emotion-cache-1v3fvcr h1,
-    .stApp .st-emotion-cache-1hynsf2 h1,
-    .stApp .stHeading,
-    .stApp .stHeading h1,
-    h1 {
-        font-size: 22px !important;
-        line-height: 1.3 !important;
-    }
-    
-    /* 侧边栏宽度 */
-    section[data-testid="stSidebar"] {
-        width: 280px !important;
-    }
-    
-    /* 输入框 */
-    .stChatInputContainer textarea {
-        font-size: 14px !important;
-    }
-    
-    /* 气泡文字 */
-    [data-testid="stChatMessageContent"] {
-        font-size: 14px !important;
-    }
-    
-    /* 侧边栏文字 */
-    section[data-testid="stSidebar"] * {
-        font-size: 13px !important;
-    }
+        .stApp h1,
+        h1 {
+            font-size: 22px !important;
+            line-height: 1.3 !important;
+        }
+        section[data-testid="stSidebar"] {
+            width: 280px !important;
+        }
+        .stChatInputContainer textarea {
+            font-size: 14px !important;
+        }
+        [data-testid="stChatMessageContent"] {
+            font-size: 14px !important;
+        }
+        section[data-testid="stSidebar"] * {
+            font-size: 13px !important;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
+
 # ========== 初始化会话状态 ==========
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "system", "content": "你是一个温和的心理陪伴助手。"},
-        {"role": "assistant", "content": "你好，我是你的 AI 心理陪伴助手。你今天心情怎么样？"}
+        {"role": "system", "content": "你是一个温和的心理陪伴助手。"}
     ]
+    # 只添加一次欢迎消息
+    st.session_state.messages.append({"role": "assistant", "content": "你好，我是你的 AI 心理陪伴助手。你今天心情怎么样？"})
     st.session_state.asked_for_appointment = False
     st.session_state.refused_hotline = False
-# ========== 侧边栏==========
+
+# ========== 侧边栏 ==========
 with st.sidebar:
     st.markdown("### 📞 紧急求助")
     st.markdown("**全国心理援助热线：12356**")
@@ -259,7 +236,7 @@ with st.sidebar:
             help="输入任意 emoji 或文字，如 🌸、💙、🦊",
             label_visibility="collapsed"
         )
-    
+
 # ========== 显示历史消息 ==========
 for msg in st.session_state.messages:
     if msg["role"] == "user":
@@ -269,6 +246,7 @@ for msg in st.session_state.messages:
         with st.chat_message("assistant", avatar=ai_avatar):
             st.write(msg["content"])
 
+# ========== 接收用户输入 ==========
 user_input = st.chat_input("你说，我在听")
 
 if user_input:
@@ -280,16 +258,15 @@ if user_input:
         risk_level = detect_risk(user_input, client)
         
         if risk_level == 'high':
-          response = client.chat.completions.create(
-            model="deepseek-v4-pro",
-            messages=st.session_state.messages
-    )
-          empathy_reply = response.choices[0].message.content
-          resource_message = CRISIS_RESPONSE
-    
-          reply = empathy_reply + resource_message
-          st.session_state.refused_hotline = True
-
+            response = client.chat.completions.create(
+                model="deepseek-v4-pro",
+                messages=st.session_state.messages
+            )
+            empathy_reply = response.choices[0].message.content
+            resource_message = CRISIS_RESPONSE
+            reply = empathy_reply + "\n\n---\n" + resource_message
+            # 注意：高风险时不自动设置 refused_hotline = True
+            # 让用户点击“不再显示”按钮时才设置
         else:
             response = client.chat.completions.create(
                 model="deepseek-v4-pro",
@@ -305,6 +282,8 @@ if user_input:
 
     with st.chat_message("assistant", avatar=ai_avatar):
         st.write(reply)
+        
+        # ===== 中风险按钮 =====
         if risk_level == 'medium' and not st.session_state.asked_for_appointment:
             col1, col2 = st.columns(2)
             with col1:
@@ -316,12 +295,14 @@ if user_input:
                 if st.button("❌ 不需要，继续对话", key="no_appointment"):
                     st.session_state.asked_for_appointment = True
                     st.rerun()
+        
+        # ===== 高风险按钮 =====
         elif risk_level == 'high':
-            st.warning("如果你需要立即联系学校心理中心，请点击下方按钮：")
-            if st.button("立即预约", key="high_risk_button"):
-                show_login_tips()
-            if st.button("❌ 不再显示资源信息", key="dismiss_high"):
-                st.session_state.refused_hotline = True
-                st.rerun()
+            # 不再显示 st.warning，因为资源信息已经在 reply 里了
+            # 只保留“不再显示”按钮
+            if not st.session_state.refused_hotline:
+                if st.button("❌ 不再显示资源信息", key="dismiss_high"):
+                    st.session_state.refused_hotline = True
+                    st.rerun()
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
