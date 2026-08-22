@@ -18,7 +18,7 @@ def show_login_tips():
     - 初始密码：`Gdpc` + 出生日期（例如 `Gdpc20010203`）
     
     **若提示密码错误，请尝试：**
-    - `Gdpc` + 个人学号（例如 `Gdpc322078123156`）
+    - `Gdpc` + 个人学号
     - `Gdpc12345`
     - 或使用你之前修改过的密码
     """)
@@ -176,7 +176,7 @@ if "messages" not in st.session_state:
 # ========== 侧边栏 ==========
 with st.sidebar:
     st.markdown("### 📞 紧急求助")
-    st.markdown("**全国心理援助热线：12356**")
+    st.markdown("**全国心理援助热线：12355**")
     if st.button("🏥 学校心理中心预约"):
         show_login_tips()
     st.caption("⚠️ 我是AI助手，不能替代专业心理咨询。")
