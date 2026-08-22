@@ -1,5 +1,5 @@
-CRISIS_HOTLINE_1 = "12356"
-CRISIS_HOTLINE_2 = "96525"
+CRISIS_HOTLINE_1 = "12355"
+CRISIS_HOTLINE_2 = "020-81899120"
 ""
 HIGH_RISK_KEYWORDS = [
     '自杀', '自残', '跳楼', '割腕', '不想活了',
@@ -38,7 +38,7 @@ CRISIS_RESPONSE = f"""
 ⚠️ 我不是专业心理咨询师，无法提供专业帮助。
 请你立刻联系以下专业机构：
 
-📞 广州市阳光成功热线：{CRISIS_HOTLINE_2}(24小时免费)
+📞 广州市心理援助热线：{CRISIS_HOTLINE_2}(24小时免费)
 📞 全国心理援助热线：{CRISIS_HOTLINE_1}(24小时免费)
 🏫 也可以点击侧边的预约按钮联系学校心理健康教育与咨询中心
 
